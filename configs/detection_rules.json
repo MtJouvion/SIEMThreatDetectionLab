@@ -1,0 +1,27 @@
+[
+  {
+    "id": "BRUTE_FORCE_SSH",
+    "description": "Multiple failed SSH logins",
+    "pattern": "Failed password for",
+    "threshold": 5
+  },
+  {
+    "id": "INVALID_USER",
+    "description": "Probing with invalid usernames",
+    "pattern": "Invalid user",
+    "threshold": 3
+  },
+  {
+    "id": "ROOT_LOGIN_SUCCESS",
+    "description": "Direct root login success",
+    "pattern": "Accepted password for root",
+    "threshold": 1
+  },
+  {
+    "id": "FAILED_SSH_WITH_IP",
+    "description": "Failed SSH login with extracted username and IP",
+    "pattern": "Failed password for (?:invalid user )?(?P<user>\\S+) from (?P<ip>\\d{1,3}(?:\\.\\d{1,3}){3})",
+    "type": "regex",
+    "threshold": 1
+  }
+]

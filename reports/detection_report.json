@@ -1,0 +1,53 @@
+[
+  {
+    "rule_id": "BRUTE_FORCE_SSH",
+    "description": "Multiple failed SSH logins",
+    "pattern": "Failed password for",
+    "type": "substring",
+    "threshold": 5,
+    "match_count": 6,
+    "triggered": true,
+    "last_seen": "2025-09-17T23:30:39",
+    "last_match_sample": "Sep 17 23:30:39 labhost sshd[1234]: Failed password for invalid user admin from 203.0.113.15 port 54326 ssh2",
+    "last_captures": null
+  },
+  {
+    "rule_id": "INVALID_USER",
+    "description": "Probing with invalid usernames",
+    "pattern": "Invalid user",
+    "type": "substring",
+    "threshold": 3,
+    "match_count": 0,
+    "triggered": false,
+    "last_seen": null,
+    "last_match_sample": null,
+    "last_captures": null
+  },
+  {
+    "rule_id": "ROOT_LOGIN_SUCCESS",
+    "description": "Direct root login success",
+    "pattern": "Accepted password for root",
+    "type": "substring",
+    "threshold": 1,
+    "match_count": 0,
+    "triggered": false,
+    "last_seen": null,
+    "last_match_sample": null,
+    "last_captures": null
+  },
+  {
+    "rule_id": "FAILED_SSH_WITH_IP",
+    "description": "Failed SSH login with extracted username and IP",
+    "pattern": "Failed password for (?:invalid user )?(?P<user>\\S+) from (?P<ip>\\d{1,3}(?:\\.\\d{1,3}){3})",
+    "type": "regex",
+    "threshold": 1,
+    "match_count": 6,
+    "triggered": true,
+    "last_seen": "2025-09-17T23:30:39",
+    "last_match_sample": "Sep 17 23:30:39 labhost sshd[1234]: Failed password for invalid user admin from 203.0.113.15 port 54326 ssh2",
+    "last_captures": {
+      "user": "admin",
+      "ip": "203.0.113.15"
+    }
+  }
+]
