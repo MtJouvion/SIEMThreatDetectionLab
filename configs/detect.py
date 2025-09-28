@@ -4,14 +4,14 @@ from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
-#Path setup (works from any current directory) 
+
 BASE_DIR = Path(__file__).resolve().parents[1]
 LOG_FILE    = BASE_DIR / "logs"    / "auth.log"
 RULES_FILE  = BASE_DIR / "configs" / "detection_rules.json"
 REPORT_FILE = BASE_DIR / "reports" / "detection_report.json"
-ALERTS_STREAM = REPORT_FILE.parent / "alerts.jsonl"  # <-- JSON Lines
+ALERTS_STREAM = REPORT_FILE.parent / "alerts.jsonl"  
 
-#syslog timestamp parser 
+
 MONTHS = {
     "Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6,
     "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12
@@ -25,13 +25,13 @@ def parse_syslog_timestamp(line: str) -> str | None:
     mon = MONTHS.get(m.group("mon"))
     day = int(m.group("day"))
     hh, mm, ss = map(int, m.group("time").split(":"))
-    year = datetime.now().year  # auth.log omits year
+    year = datetime.now().year  
     try:
         return datetime(year, mon, day, hh, mm, ss).isoformat()
     except Exception:
         return None
 
-# Rules / log IO 
+ 
 def load_rules():
     with RULES_FILE.open("r", encoding="utf-8") as f:
         rules = json.load(f)
@@ -43,7 +43,7 @@ def load_rules():
             "description": r.get("description", ""),
             "pattern": r["pattern"],
             "threshold": int(r.get("threshold", 1)),
-            "type": r.get("type", "substring")  # "substring" | "regex"
+            "type": r.get("type", "substring")  
         }
         if rule["type"] == "regex":
             rule["_re"] = re.compile(rule["pattern"])
@@ -57,10 +57,10 @@ def read_log_lines():
     with LOG_FILE.open("r", encoding="utf-8", errors="ignore") as f:
         return f.readlines()
 
-#  Detection 
+ 
 def run_detection(lines, rules):
     counters = defaultdict(int)
-    last = {}  # rule_id -> dict
+    last = {} 
 
     for line in lines:
         ts = parse_syslog_timestamp(line)
@@ -111,7 +111,7 @@ def append_alerts_stream(alerts):
             rec["ingest_time"] = now
             f.write(json.dumps(rec) + "\n")
 
-# CLI 
+
 def main():
     if not RULES_FILE.exists():
         print(f"[!] Missing rules file: {RULES_FILE}")
